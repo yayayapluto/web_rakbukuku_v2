@@ -9,6 +9,7 @@ use App\Models\Record;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Schema;
 
 class DatabaseSeeder extends Seeder
 {
@@ -17,11 +18,28 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(10)->create();
-        Rack::factory(5)->create();
-        Category::factory(5)->create();
+        Schema::disableForeignKeyConstraints();
 
-        Book::factory(15)->create();
-        Record::factory(30)->create();
+        User::truncate();
+        Rack::truncate();
+        Category::truncate();
+        Book::truncate();
+        Record::truncate();
+
+        User::create([
+            "user_id" => \Str::uuid(),
+            "name" => "admin_rakbukuku",
+            "email" => "admin_rakbukuku@gmail.com",
+            "password" => "rakbukuku"
+        ]);
+
+        User::factory(10)->create();
+        Rack::factory(3)->create();
+        Category::factory(10)->create();
+
+        Book::factory(100)->create();
+        Record::factory(23)->create();
+
+        Schema::enableForeignKeyConstraints();
     }
 }

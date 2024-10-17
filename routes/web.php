@@ -9,25 +9,28 @@ use App\Http\Controllers\RecordController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 
+use App\Http\Controllers\ViewController;
 use Illuminate\Support\Facades\Route;
 
-//Public
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-// Route::post('/login', [AuthController::class, 'login']);
-// Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+Route::post('/login', [AuthController::class, 'login'])->name("login.submit");
 
-// Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
-// Route::post('/register', [AuthController::class, 'register']);
+Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
+Route::post('/register', [AuthController::class, 'register'])->name("register.subbmit");
 
-// Route::get('/', [BookController::class, 'index'])->name('home');
-// Route::get('/books/{uuid}', [BookController::class, 'show'])->name('books.show');
-// Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
-// Route::get('/categories/{uuid}', [CategoryController::class, 'show'])->name('categories.show');
+Route::get('/', [ViewController::class, 'home'])->name('home');
+Route::get('/books/{title}', [ViewController::class, 'book_detail'])->name('books.detail');
+Route::get('/categories', [ViewController::class, 'categories'])->name('categories');
+Route::get('/categories/{name}', [ViewController::class, 'category_detail'])->name('categories.detail');
+Route::get('/search', [ViewController::class, 'search'])->name('search');
 
 // //Public Auth
 // Route::middleware(['auth'])->group(function () {
+//     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+
 //     Route::get('/borrow/{uuid}', [RecordController::class, 'confirmBorrow'])->name('borrow.confirm');
 //     Route::post('/borrow/{uuid}', [RecordController::class, 'borrow'])->name('borrow.store');
+
 //     Route::get('/return/{uuid}', [RecordController::class, 'confirmReturn'])->name('return.confirm');
 //     Route::post('/return/{uuid}', [RecordController::class, 'return'])->name('return.store');
 
@@ -44,19 +47,15 @@ Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 //     // User routes
 //     Route::resource('users', UserController::class);
 
-//     // Book routes
-//     Route::resource('books', BookController::class);
+//     // Rack routes
+//     Route::resource('racks', RackController::class);
 
 //     // Category routes
 //     Route::resource('categories', CategoryController::class);
 
+//     // Book routes
+//     Route::resource('books', BookController::class);
+
 //     // Borrow routes
-//     Route::get('borrows', [RecordController::class, 'index'])->name('admin.borrows.index');
-//     Route::get('borrows/{id}', [RecordController::class, 'show'])->name('admin.borrows.show');
-//     Route::delete('borrows/{id}', [RecordController::class, 'returnBook'])->name('admin.borrows.return');
-//     Route::resource('borrows', CategoryController::class)->only(["index", "show", "destroy"]);
-
-
-//     // Rack routes
-//     Route::resource('racks', RackController::class);
+//     Route::resource('records', RecordController::class)->only(["index", "show", "destroy"]);
 // });

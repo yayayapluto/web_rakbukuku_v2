@@ -1,0 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Include TailAdmin CSS */
+@import 'tailadmin.css';  /* Adjust if necessary */
