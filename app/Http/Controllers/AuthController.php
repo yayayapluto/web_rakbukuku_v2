@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -27,19 +28,44 @@ class AuthController extends Controller
             $validator->validate();
 
             if (Auth::attempt($request->only('email', 'password'))) {
-                return Redirect::route('home')->with('success', 'Login successful.');
+                $route = "home";
+
+                if (User::where("email", $request->email)->value("is_admin")) {
+                    $route = "dashboard";
+                }
+                // return Redirect::route('home')->with('success', 'Login successful.');
+                return response()->json([
+                    "success" => true,
+                    "msg" => "Berhasil masuk",
+                    "route" => route($route)
+                ]);
             }
 
-            return Redirect::back()->withErrors(['email' => 'Invalid credentials.'])->withInput();
+            // return Redirect::back()->withErrors(['email' => 'Invalid credentials.'])->withInput();
+            return response()->json([
+                "success" => false,
+                "msg" => "Email atau password salah nih",
+                "route" => route("login")
+            ]);
         } catch (ValidationException $e) {
-            return Redirect::back()->withErrors($validator)->withInput();
+            // return Redirect::back()->withErrors($validator)->withInput();
+            return response()->json([
+                "success" => false,
+                "msg" => "Coba masuk lagi dehh",
+                "route" => route("login")
+            ]);
         }
     }
 
     public function logout()
     {
         Auth::logout();
-        return Redirect::route('login')->with('success', 'Logged out successfully.');
+        // return Redirect::route('login')->with('success', 'Logged out successfully.');
+        return response()->json([
+            "success" => true,
+            "msg" => "Berhasil keluar, login lagi yak",
+            "route" => route("login")
+        ]);
     }
 
     public function showRegistrationForm()
@@ -52,10 +78,18 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8|confirmed',
+            'password' => 'required|string|min:8',
             'gender' => 'nullable|string',
             'phone_number' => 'nullable|string',
-            'photo' => 'nullable|url',
+        ], [
+            'name.required' => 'Nama harus diisi.',
+            'email.required' => 'Email harus diisi.',
+            'email.email' => 'Silakan masukkan alamat email yang valid.',
+            'email.unique' => 'Email ini sudah terdaftar.',
+            'password.required' => 'Password harus diisi.',
+            'password.min' => 'Password harus terdiri dari minimal 8 karakter.',
+            'gender.in' => 'Gender harus berupa male, female, atau other.',
+            'phone_number.max' => 'Nomor telepon tidak boleh lebih dari 15 karakter.',
         ]);
 
         try {
@@ -65,18 +99,30 @@ class AuthController extends Controller
                 'user_id' => (string) \Str::uuid(),
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => bcrypt($request->password),
+                'password' => Hash::make($request->password),
                 'gender' => $request->gender,
                 'phone_number' => $request->phone_number,
-                'photo' => $request->photo,
             ]);
-
-            Auth::login($user);
-            return Redirect::route('home')->with('success', 'Registration successful.');
+            // return Redirect::route('home')->with('success', 'Registration successful.');
+            return response()->json([
+                "success" => true,
+                "msg" => "Berhasil registrasi",
+                "route" => route("register")
+            ]);
         } catch (ValidationException $e) {
-            return Redirect::back()->withErrors($validator)->withInput();
+            // return Redirect::back()->withErrors($validator)->withInput();
+            return response()->json([
+                "success" => false,
+                "msg" => implode("\n",$e->validator->errors()->all()),
+                "route" => route("register")
+            ]);
         } catch (\Exception $e) {
-            return Redirect::back()->withErrors(['error' => 'An error occurred during registration.']);
+            // return Redirect::back()->withErrors(['error' => 'An error occurred during registration.']);
+            return response()->json([
+                "success" => false,
+                "msg" => "Coba registrasi ulang deh",
+                "route" => route("register")
+            ]);
         }
     }
 }
