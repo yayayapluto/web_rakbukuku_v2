@@ -26,15 +26,15 @@ Route::get('/categories', [ViewController::class, 'categories'])->name('categori
 Route::get('/categories/{name}', [ViewController::class, 'category_detail'])->name('categories.detail');
 Route::get('/search', [ViewController::class, 'search'])->name('search');
 
-// //Public Auth
+//Public Auth
 Route::middleware(['auth'])->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    // Route::get('/borrow/{uuid}', [RecordController::class, 'confirmBorrow'])->name('borrow.confirm');
-    // Route::post('/borrow/{uuid}', [RecordController::class, 'borrow'])->name('borrow.store');
+    Route::get('/borrow', [UserRecord::class, 'confirmBorrow'])->name('borrow');
+    Route::post('/borrow', [UserRecord::class, 'borrow'])->name('borrow.submit');
 
-    // Route::get('/return/{uuid}', [RecordController::class, 'confirmReturn'])->name('return.confirm');
-    // Route::post('/return/{uuid}', [RecordController::class, 'return'])->name('return.store');
+    Route::get('/return', [UserRecord::class, 'confirmReturn'])->name('return');
+    Route::post('/return', [UserRecord::class, 'return'])->name('return.submit');
 
     // Route::get('/profile', [UserController::class, 'show'])->name('profile.show');
     // Route::get('/profile/borrowed', [UserController::class, 'borrowed'])->name('profile.borrowed');

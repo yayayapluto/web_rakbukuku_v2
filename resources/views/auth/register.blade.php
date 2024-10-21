@@ -109,9 +109,11 @@
                             html: `<p>${res.msg}</p>`,
                             position: "center",
                             showConfirmButton: false,
-                            timer: 3000,
+                            timer: 2000,
                             timerProgressBar: true,
-                        }).then;
+                        }).then(function () {
+                            location.href = `{{route('${res.route}')}}`
+                        });
                     },
                     error: function(err) {
                         const res = err.responseJSON;
