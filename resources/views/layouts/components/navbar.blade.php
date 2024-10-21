@@ -12,7 +12,8 @@
                         placeholder="Search..." data-url="{{ route('search') }}">
                 </form>
             </div>
-            <div class="w-2/12 text-center">
+            @guest
+                <div class="w-2/12 text-center">
                 <div class="flex justify-center space-x-4">
                     <button
                         class="relative inline-flex items-center font-bold bg-white border border-neutral-200 text-neutral-700 py-3 px-4 rounded">
@@ -24,6 +25,7 @@
                     </button>
                 </div>
             </div>
+            @endguest
         </div>
     </div>
     <div class="border-neutral-200 border-t-[1px]"></div>
