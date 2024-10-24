@@ -1,0 +1,152 @@
+html * {
+    margin: 0;
+    padding: 0;
+    font-family: "Poppins", sans-serif;
+    overflow-x: hidden;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+#headercontainer {
+    margin-top: 120px;
+}
+
+#headertext {
+    color: white;
+    font-size: 35px;
+    width: 670px;
+    margin-top: 30px;
+    font-weight: bold;
+}
+
+.headerbutton {
+    color: #0099ff;
+    background-color: white;
+    border: none;
+    padding: 4px 30px 4px 30px;
+    font-size: 22px;
+    border-radius: 10px;
+    font-weight: 700;
+
+}
+
+.headerbutton:hover{
+    background-color: rgb(240, 240, 240);
+    animation: pulse;
+    animation-duration: 0.2s;
+}
+
+
+.main-hero {
+    background-color: #0099ff;
+}
+
+.top-side {
+    display: flex;
+    flex-direction: row;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: fit-content;
+}
+
+.nav-btn :hover {
+    color: #009DFF;
+}
+
+.card-img-container {
+    width: 100%;
+    height: 250px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-img-top {
+    width: 100%;
+    height: 50%;
+    object-fit: cover;
+}
+
+.backgorund-wave {
+    background-color: #009DFF;
+}
+
+.right-side {
+    margin-right: 50px;
+}
+
+.left-side {
+    background-color: white;
+}
+
+.vl {
+    border-left: 6px solid rgb(136, 136, 136);
+    height: 500px;
+}
+
+.footer {
+    background-color: #343a40;
+    color: white;
+    padding: 20px 0;
+}
+
+.footer-logo {
+    max-width: 80px;
+}
+
+.footer hr {
+    border-color: #6c757d;
+    margin: 10px 0;
+}
+
+.footer-social-icons a {
+    color: white;
+    margin-right: 15px;
+    font-size: 20px;
+    text-decoration: none;
+}
+
+.footer-social-icons a:hover {
+    color: #0d6efd;
+}
+
+.footer .text-center {
+    font-size: 0.9rem;
+}
+
+#headervoting1 {
+    color: white;
+}
+
+#headervoting2 {
+    color: white;
+}
+
+#containervoting1:hover {
+    border-left: #005fec;
+    border-bottom: #005fec;
+}
+
+@media screen and (max-width: 1000px) {
+    .headerwraping{
+        margin-top: 50px;
+    }
+    #headercontainer {
+        margin-top: 50px;
+    }
+
+    #headertext {
+        margin-top: 0px;
+    }
+
+    #imgmpk {
+        display: none;
+    }
+
+    #imgosis {
+        display: none;
+    }
+}

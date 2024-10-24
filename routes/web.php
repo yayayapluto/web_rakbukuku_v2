@@ -9,6 +9,7 @@ use App\Http\Controllers\RecordController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\AdminController;
 
+use App\Http\Controllers\UserRecordController;
 use App\Http\Controllers\ViewController;
 use Illuminate\Support\Facades\Route;
 
@@ -30,34 +31,33 @@ Route::get('/search', [ViewController::class, 'search'])->name('search');
 Route::middleware(['auth'])->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    Route::get('/borrow', [UserRecord::class, 'confirmBorrow'])->name('borrow');
-    Route::post('/borrow', [UserRecord::class, 'borrow'])->name('borrow.submit');
+    Route::get('/borrow', [UserRecordController::class, 'showBorrowForm'])->name('borrow.form');
+    // Route::post('/borrow', [UserRecord::class, 'borrow'])->name('borrow.submit');
 
-    Route::get('/return', [UserRecord::class, 'confirmReturn'])->name('return');
-    Route::post('/return', [UserRecord::class, 'return'])->name('return.submit');
+    Route::get('/return', [UserRecordController::class, 'showReturnForm'])->name('return');
+    // Route::post('/return', [UserRecord::class, 'return'])->name('return.submit');
 
-    // Route::get('/profile', [UserController::class, 'show'])->name('profile.show');
-    // Route::get('/profile/borrowed', [UserController::class, 'borrowed'])->name('profile.borrowed');
-    // Route::get('/profile/history', [UserController::class, 'history'])->name('profile.history');
+    Route::get('/profile', [UserRecordController::class, 'showProfile'])->name('profile');
+    Route::get('/profile/history', [UserRecordController::class, 'showHistory'])->name('profile.history');
 });
 
-// //Admin
-// Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
-//     Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
-//     Route::get('/monitor', [AdminController::class, 'monitor'])->name('admin.monitor');
+//Admin
+Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
+    Route::get('/', [AdminController::class, 'dashboard'])->name('admin.dashboard');
+    Route::get('/monitor', [AdminController::class, 'monitor'])->name('admin.monitor');
 
-//     // User routes
-//     Route::resource('users', UserController::class);
+    // User routes
+    Route::resource('users', UserController::class);
 
-//     // Rack routes
-//     Route::resource('racks', RackController::class);
+    // Rack routes
+    Route::resource('racks', RackController::class);
 
-//     // Category routes
-//     Route::resource('categories', CategoryController::class);
+    // Category routes
+    Route::resource('categories', CategoryController::class);
 
-//     // Book routes
-//     Route::resource('books', BookController::class);
+    // Book routes
+    Route::resource('books', BookController::class);
 
-//     // Borrow routes
-//     Route::resource('records', RecordController::class)->only(["index", "show", "destroy"]);
-// });
+    // Borrow routes
+    Route::resource('records', RecordController::class)->only(["index", "show", "destroy"]);
+});

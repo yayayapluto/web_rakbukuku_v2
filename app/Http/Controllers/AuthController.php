@@ -31,7 +31,7 @@ class AuthController extends Controller
                 $route = "home";
 
                 if (User::where("email", $request->email)->value("is_admin")) {
-                    $route = "dashboard";
+                    $route = "admin.dashboard";
                 }
                 // return Redirect::route('home')->with('success', 'Login successful.');
                 return response()->json([
@@ -60,12 +60,7 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::logout();
-        // return Redirect::route('login')->with('success', 'Logged out successfully.');
-        return response()->json([
-            "success" => true,
-            "msg" => "Berhasil keluar, login lagi yak",
-            "route" => route("login")
-        ]);
+        return Redirect::route('login')->with('success', 'Berhasil keluar');
     }
 
     public function showRegistrationForm()
@@ -107,7 +102,7 @@ class AuthController extends Controller
             return response()->json([
                 "success" => true,
                 "msg" => "Berhasil registrasi",
-                "route" => route("register")
+                "route" => route("login")
             ]);
         } catch (ValidationException $e) {
             // return Redirect::back()->withErrors($validator)->withInput();

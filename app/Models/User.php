@@ -17,15 +17,12 @@ class User extends Authenticatable
      *
      * @var array<int, string>
      */
-    protected $fillable = [
-        'user_id',
-        'name',
-        'email',
-        'password',
-        'gender',
-        'phone_number',
-        'photo',
-    ];
+    protected $fillable = ['user_id', 'name', 'email', 'password', 'gender', 'phone_number', 'photo'];
+
+    public function records()
+    {
+        return $this->hasMany(Record::class, 'user_id', 'user_id');
+    }
 
     /**
      * The attributes that should be hidden for serialization.
@@ -48,10 +45,5 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
-    }
-
-    public function records()
-    {
-        return $this->hasMany(Record::class, 'user_id', 'user_id');
     }
 }

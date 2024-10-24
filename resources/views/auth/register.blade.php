@@ -112,7 +112,7 @@
                             timer: 2000,
                             timerProgressBar: true,
                         }).then(function () {
-                            location.href = `{{route('${res.route}')}}`
+                            location.href = res.route
                         });
                     },
                     error: function(err) {

@@ -1,4 +1,8 @@
 <!-- ===== Navbar Start ===== -->
+@php
+use Illuminate\Support\Facades\Auth;
+    
+@endphp
 <navbar class="fixed top-0 z-40 w-full bg-white h-20">
     <div class="l-container mx-auto px-4">
         <div class="my-4 flex items-center justify-evenly">
@@ -14,18 +18,51 @@
             </div>
             @guest
                 <div class="w-2/12 text-center">
-                <div class="flex justify-center space-x-4">
-                    <button
-                        class="relative inline-flex items-center font-bold bg-white border border-neutral-200 text-neutral-700 py-3 px-4 rounded">
-                        Login
-                    </button>
-                    <button
-                        class="relative inline-flex items-center font-bold bg-blue-500 text-white py-3 px-4 rounded">
-                        Register
-                    </button>
+                    <div class="flex justify-center space-x-4">
+                        <a href="{{ route('register') }}">
+                            <button
+                                class="relative inline-flex items-center font-bold bg-white border border-neutral-200 text-neutral-700 py-3 px-4 rounded">
+                                Register
+                            </button>
+                        </a>
+                        <a href="{{ route('login') }}">
+                            <button
+                                class="relative inline-flex items-center font-bold bg-blue-500 text-white py-3 px-4 rounded">
+                                Login
+                            </button>
+                        </a>
+                    </div>
                 </div>
-            </div>
             @endguest
+            @if (Auth::user()->is_admin)
+                <div class="w-2/12 text-center">
+                    <div class="flex justify-center space-x-4">
+                        <a href="{{ route('admin.dashboard') }}">
+                            <button
+                                class="relative inline-flex items-center font-bold bg-blue-500 text-white py-3 px-4 rounded">
+                                Dashboard
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            @else
+                <div class="w-2/12 text-center">
+                    <div class="flex justify-center space-x-4">
+                        <a href="{{ route('profile.history') }}">
+                            <button
+                                class="relative inline-flex items-center font-bold bg-white border border-neutral-200 text-neutral-700 py-3 px-4 rounded">
+                                History
+                            </button>
+                        </a>
+                        <a href="{{ route('profile') }}">
+                            <button
+                                class="relative inline-flex items-center font-bold bg-blue-500 text-white py-3 px-4 rounded">
+                                Profile
+                            </button>
+                        </a>
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
     <div class="border-neutral-200 border-t-[1px]"></div>

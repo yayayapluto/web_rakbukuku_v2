@@ -6,81 +6,108 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
-use Redirect;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
     public function index()
     {
         $categories = Category::all();
-        return view('categories.index', compact('categories'));
+        return view('private.categories.index', compact('categories'));
     }
 
     public function create()
     {
-        return view('categories.create');
+        return view('private.categories.create');
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'category_id' => 'required|uuid|unique:categories,category_id',
             'name' => 'required|string|max:255',
         ]);
 
         try {
             $validator->validate();
-            Category::create([
-                'category_id' => $request->category_id,
+            $category = Category::create([
+                'category_id' => Str::uuid(),
                 'name' => $request->name,
             ]);
-            return Redirect::route('categories.index')->with('success', 'Category created successfully.');
+            return response()->json([
+                'success' => true,
+                'msg' => 'Category created successfully.',
+                'category' => $category,
+            ]);
         } catch (ValidationException $e) {
-            return Redirect::back()->withErrors($validator)->withInput();
+            return response()->json([
+                'success' => false,
+                'msg' => 'Validation failed.',
+                'errors' => $validator->errors(),
+            ], 422);
         } catch (\Exception $e) {
-            return Redirect::back()->withErrors(['error' => 'An error occurred while creating the category.']);
+            return response()->json([
+                'success' => false,
+                'msg' => 'An error occurred while creating the category.',
+            ], 500);
         }
     }
 
-    public function show(string $id)
+    public function show(string $uuid)
     {
-        $category = Category::findOrFail($id);
-        return view('categories.show', compact('category'));
+        $category = Category::where('category_id', $uuid)->firstOrFail();
+        return view('private.categories.show', compact('category'));
     }
 
-    public function edit(string $id)
+    public function edit(string $uuid)
     {
-        $category = Category::findOrFail($id);
-        return view('categories.edit', compact('category'));
+        $category = Category::where('category_id', $uuid)->firstOrFail();
+        return view('private.categories.edit', compact('category'));
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $uuid)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255|unique:categories,name,' . $id,
+            'name' => 'required|string|max:255|unique:categories,name,' . $uuid . ',category_id',
         ]);
 
         try {
             $validator->validate();
-            $category = Category::findOrFail($id);
+            $category = Category::where('category_id', $uuid)->firstOrFail();
             $category->update([
                 'name' => $request->name,
             ]);
-            return Redirect::route('categories.index')->with('success', 'Category updated successfully.');
+            return response()->json([
+                'success' => true,
+                'msg' => 'Category updated successfully.',
+                'category' => $category,
+            ]);
         } catch (ValidationException $e) {
-            return Redirect::back()->withErrors($validator)->withInput();
+            return response()->json([
+                'success' => false,
+                'msg' => 'Validation failed.',
+                'errors' => $validator->errors(),
+            ], 422);
         } catch (\Exception $e) {
-            return Redirect::back()->withErrors(['error' => 'An error occurred while updating the category.']);
+            return response()->json([
+                'success' => false,
+                'msg' => 'An error occurred while updating the category.',
+            ], 500);
         }
     }
 
-    public function destroy(string $id)
+    public function destroy(string $uuid)
     {
         try {
-            Category::destroy($id);
-            return Redirect::route('categories.index')->with('success', 'Category deleted successfully.');
+            Category::where('category_id', $uuid)->firstOrFail()->delete();
+            return response()->json([
+                'success' => true,
+                'msg' => 'Category deleted successfully.',
+            ]);
         } catch (\Exception $e) {
-            return Redirect::back()->withErrors(['error' => 'An error occurred while deleting the category.']);
+            return response()->json([
+                'success' => false,
+                'msg' => 'An error occurred while deleting the category.',
+            ], 500);
         }
     }
 }

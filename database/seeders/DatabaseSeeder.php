@@ -30,7 +30,8 @@ class DatabaseSeeder extends Seeder
             "user_id" => \Str::uuid(),
             "name" => "admin_rakbukuku",
             "email" => "admin_rakbukuku@gmail.com",
-            "password" => "rakbukuku"
+            "password" => "rakbukuku",
+            "is_admin" => true
         ]);
 
         User::factory(10)->create();

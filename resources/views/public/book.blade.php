@@ -16,4 +16,7 @@
 
     <h2>Description</h2>
     <p>{{ $book->description ?? 'No description available.' }}</p> <!-- Adjust this based on your Book model -->
-@endsection
+    <a href="{{route("borrow.form")}}">
+        <button>Pinjam</button>
+    </a>
+@endsection'

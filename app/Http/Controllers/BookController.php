@@ -9,27 +9,26 @@ use App\Models\Book;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Redirect;
+use Str;
 
 class BookController extends Controller
 {
     public function index()
     {
         $books = Book::with(['rack', 'category'])->get();
-        return view('books.index', compact('books'));
+        return view('private.books.index', compact('books'));
     }
 
     public function create()
     {
-        // Assuming you have a method to get racks and categories
         $racks = Rack::all();
         $categories = Category::all();
-        return view('books.create', compact('racks', 'categories'));
+        return view('private.books.create', compact('racks', 'categories'));
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'book_id' => 'required|uuid|unique:books,book_id',
             'rack_id' => 'required|uuid|exists:racks,rack_id',
             'category_id' => 'required|uuid|exists:categories,category_id',
             'title' => 'required|string|max:255',
@@ -43,49 +42,50 @@ class BookController extends Controller
         ]);
 
         try {
+            $request["book_id"] = Str::uuid();
             $validator->validate();
-            Book::create([
-                'book_id' => $request->book_id,
-                'rack_id' => $request->rack_id,
-                'category_id' => $request->category_id,
-                'title' => $request->title,
-                'isbn' => $request->isbn,
-                'writer' => $request->writer,
-                'publisher' => $request->publisher,
-                'publish_year' => $request->publish_year,
-                'cover' => $request->cover,
-                'soft_file' => $request->soft_file,
-                'stock' => $request->stock,
-            ]);
-            return Redirect::route('books.index')->with('success', 'Book created successfully.');
+            $book = Book::create($request->all());
+            return response()->json([
+                'success' => true,
+                'msg' => 'Book created successfully.',
+                'book' => $book,
+            ], 201);
         } catch (ValidationException $e) {
-            return Redirect::back()->withErrors($validator)->withInput();
+            return response()->json([
+                'success' => false,
+                'msg' => 'Validation errors occurred.',
+                'errors' => $validator->errors(),
+            ], 422);
         } catch (\Exception $e) {
-            return Redirect::back()->withErrors(['error' => 'An error occurred while creating the book.']);
+            \Log::error('Error creating book: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'msg' => 'An error occurred while creating the book.',
+            ], 500);
         }
     }
 
-    public function show(string $id)
+    public function show(string $uuid)
     {
-        $book = Book::with(['rack', 'category'])->findOrFail($id);
-        return view('books.show', compact('book'));
+        $book = Book::with(['rack', 'category'])->where('book_id', $uuid)->firstOrFail();
+        return view('private.books.show', compact('book'));
     }
 
-    public function edit(string $id)
+    public function edit(string $uuid)
     {
-        $book = Book::findOrFail($id);
+        $book = Book::where('book_id', $uuid)->firstOrFail();
         $racks = Rack::all();
         $categories = Category::all();
-        return view('books.edit', compact('book', 'racks', 'categories'));
+        return view('private.books.edit', compact('book', 'racks', 'categories'));
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $uuid)
     {
         $validator = Validator::make($request->all(), [
             'rack_id' => 'required|uuid|exists:racks,rack_id',
             'category_id' => 'required|uuid|exists:categories,category_id',
             'title' => 'required|string|max:255',
-            'isbn' => 'required|string|unique:books,isbn,' . $id,
+            'isbn' => 'required|string|unique:books,isbn,' . $uuid . ',book_id',
             'writer' => 'required|string|max:255',
             'publisher' => 'required|string|max:255',
             'publish_year' => 'required|integer',
@@ -96,34 +96,43 @@ class BookController extends Controller
 
         try {
             $validator->validate();
-            $book = Book::findOrFail($id);
-            $book->update([
-                'rack_id' => $request->rack_id,
-                'category_id' => $request->category_id,
-                'title' => $request->title,
-                'isbn' => $request->isbn,
-                'writer' => $request->writer,
-                'publisher' => $request->publisher,
-                'publish_year' => $request->publish_year,
-                'cover' => $request->cover,
-                'soft_file' => $request->soft_file,
-                'stock' => $request->stock,
+            $book = Book::where('book_id', $uuid)->firstOrFail();
+            $book->update($request->all());
+            return response()->json([
+                'success' => true,
+                'msg' => 'Book updated successfully.',
+                'book' => $book,
             ]);
-            return Redirect::route('books.index')->with('success', 'Book updated successfully.');
         } catch (ValidationException $e) {
-            return Redirect::back()->withErrors($validator)->withInput();
+            return response()->json([
+                'success' => false,
+                'msg' => 'Validation errors occurred.',
+                'errors' => $validator->errors(),
+            ], 422);
         } catch (\Exception $e) {
-            return Redirect::back()->withErrors(['error' => 'An error occurred while updating the book.']);
+            \Log::error('Error updating book: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'msg' => 'An error occurred while updating the book.',
+            ], 500);
         }
     }
 
-    public function destroy(string $id)
+    public function destroy(string $uuid)
     {
         try {
-            Book::destroy($id);
-            return Redirect::route('books.index')->with('success', 'Book deleted successfully.');
+            $book = Book::where('book_id', $uuid)->firstOrFail();
+            $book->delete();
+            return response()->json([
+                'success' => true,
+                'msg' => 'Book deleted successfully.',
+            ]);
         } catch (\Exception $e) {
-            return Redirect::back()->withErrors(['error' => 'An error occurred while deleting the book.']);
+            \Log::error('Error deleting book: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'msg' => 'An error occurred while deleting the book.',
+            ], 500);
         }
     }
 }

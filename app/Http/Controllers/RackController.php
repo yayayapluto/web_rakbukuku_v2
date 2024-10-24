@@ -6,81 +6,112 @@ use Illuminate\Http\Request;
 use App\Models\Rack;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
-use Redirect;
+use Str;
 
 class RackController extends Controller
 {
     public function index()
     {
         $racks = Rack::all();
-        return view('racks.index', compact('racks'));
+        return view('private.racks.index', compact('racks'));
     }
 
     public function create()
     {
-        return view('racks.create');
+        return view('private.racks.create');
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'rack_id' => 'required|uuid|unique:racks,rack_id',
             'name' => 'required|string|max:255',
         ]);
 
         try {
             $validator->validate();
-            Rack::create([
-                'rack_id' => $request->rack_id,
+            $rack = Rack::create([
+                'rack_id' => Str::uuid(),
                 'name' => $request->name,
             ]);
-            return Redirect::route('racks.index')->with('success', 'Rack created successfully.');
+            return response()->json([
+                'success' => true,
+                'msg' => 'Rack created successfully.',
+                'rack' => $rack,
+            ], 201);
         } catch (ValidationException $e) {
-            return Redirect::back()->withErrors($validator)->withInput();
+            return response()->json([
+                'success' => false,
+                'msg' => 'Validation errors occurred.',
+                'errors' => $validator->errors(),
+            ], 422);
         } catch (\Exception $e) {
-            return Redirect::back()->withErrors(['error' => 'An error occurred while creating the rack.']);
+            \Log::error('Error creating rack: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'msg' => 'An error occurred while creating the rack.',
+            ], 500);
         }
     }
 
-    public function show(string $id)
+    public function show(string $uuid)
     {
-        $rack = Rack::findOrFail($id);
-        return view('racks.show', compact('rack'));
+        $rack = Rack::where('rack_id', $uuid)->firstOrFail();
+        return view('private.racks.show', compact('rack'));
     }
 
-    public function edit(string $id)
+    public function edit(string $uuid)
     {
-        $rack = Rack::findOrFail($id);
-        return view('racks.edit', compact('rack'));
+        $rack = Rack::where('rack_id', $uuid)->firstOrFail();
+        return view('private.racks.edit', compact('rack'));
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $uuid)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255|unique:racks,name,' . $id,
+            'name' => 'required|string|max:255|unique:racks,name,' . $uuid . ',rack_id',
         ]);
 
         try {
             $validator->validate();
-            $rack = Rack::findOrFail($id);
+            $rack = Rack::where('rack_id', $uuid)->firstOrFail();
             $rack->update([
                 'name' => $request->name,
             ]);
-            return Redirect::route('racks.index')->with('success', 'Rack updated successfully.');
+            return response()->json([
+                'success' => true,
+                'msg' => 'Rack updated successfully.',
+                'rack' => $rack,
+            ]);
         } catch (ValidationException $e) {
-            return Redirect::back()->withErrors($validator)->withInput();
+            return response()->json([
+                'success' => false,
+                'msg' => 'Validation errors occurred.',
+                'errors' => $validator->errors(),
+            ], 422);
         } catch (\Exception $e) {
-            return Redirect::back()->withErrors(['error' => 'An error occurred while updating the rack.']);
+            \Log::error('Error updating rack: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'msg' => 'An error occurred while updating the rack.',
+            ], 500);
         }
     }
 
-    public function destroy(string $id)
+    public function destroy(string $uuid)
     {
         try {
-            Rack::destroy($id);
-            return Redirect::route('racks.index')->with('success', 'Rack deleted successfully.');
+            $rack = Rack::where('rack_id', $uuid)->firstOrFail();
+            $rack->delete();
+            return response()->json([
+                'success' => true,
+                'msg' => 'Rack deleted successfully.',
+            ]);
         } catch (\Exception $e) {
-            return Redirect::back()->withErrors(['error' => 'An error occurred while deleting the rack.']);
+            \Log::error('Error deleting rack: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'msg' => 'An error occurred while deleting the rack.',
+            ], 500);
         }
     }
 }

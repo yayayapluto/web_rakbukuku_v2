@@ -2,29 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use Hash;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
-use Redirect;
+use Illuminate\Support\Str; // Import Str
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
     public function index()
     {
         $users = User::all();
-        return view('users.index', compact('users'));
+        return view('private.users.index', compact('users'));
     }
 
     public function create()
     {
-        return view('users.create');
+        return view('private.users.create');
     }
 
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'user_id' => 'required|uuid|unique:users,user_id',
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email',
             'password' => 'required|string|min:8|confirmed',
@@ -35,40 +36,53 @@ class UserController extends Controller
 
         try {
             $validator->validate();
+
             User::create([
-                'user_id' => $request->user_id,
+                'user_id' => (string) Str::uuid(), // Generate UUID
                 'name' => $request->name,
                 'email' => $request->email,
-                'password' => bcrypt($request->password),
+                'password' => Hash::make($request->password),
                 'gender' => $request->gender,
                 'phone_number' => $request->phone_number,
                 'photo' => $request->photo,
             ]);
-            return Redirect::route('users.index')->with('success', 'User created successfully.');
+
+            return response()->json([
+                'success' => true,
+                'msg' => 'User created successfully.',
+                'route' => route('users.index'),
+            ]);
         } catch (ValidationException $e) {
-            return Redirect::back()->withErrors($validator)->withInput();
+            return response()->json([
+                'success' => false,
+                'msg' => 'Validation failed.',
+                'errors' => $validator->errors(),
+            ]);
         } catch (\Exception $e) {
-            return Redirect::back()->withErrors(['error' => 'An error occurred while creating the user.']);
+            return response()->json([
+                'success' => false,
+                'msg' => 'An error occurred while creating the user.',
+            ]);
         }
     }
 
-    public function show(string $id)
+    public function show(string $uuid)
     {
-        $user = User::findOrFail($id);
-        return view('users.show', compact('user'));
+        $user = User::where('user_id', $uuid)->firstOrFail();
+        return view('private.users.show', compact('user'));
     }
 
-    public function edit(string $id)
+    public function edit(string $uuid)
     {
-        $user = User::findOrFail($id);
-        return view('users.edit', compact('user'));
+        $user = User::where('user_id', $uuid)->firstOrFail();
+        return view('private.users.edit', compact('user'));
     }
 
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $uuid)
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+            'email' => 'required|string|email|max:255|unique:users,email,' . $uuid . ',user_id',
             'gender' => 'nullable|string|max:10',
             'phone_number' => 'nullable|string|max:15',
             'photo' => 'nullable|url',
@@ -76,7 +90,7 @@ class UserController extends Controller
 
         try {
             $validator->validate();
-            $user = User::findOrFail($id);
+            $user = User::where('user_id', $uuid)->firstOrFail();
             $user->update([
                 'name' => $request->name,
                 'email' => $request->email,
@@ -85,21 +99,39 @@ class UserController extends Controller
                 'phone_number' => $request->phone_number,
                 'photo' => $request->photo,
             ]);
-            return Redirect::route('users.index')->with('success', 'User updated successfully.');
+            return response()->json([
+                'success' => true,
+                'msg' => 'User updated successfully.',
+                'route' => route('users.index'),
+            ]);
         } catch (ValidationException $e) {
-            return Redirect::back()->withErrors($validator)->withInput();
+            return response()->json([
+                'success' => false,
+                'msg' => 'Validation failed.',
+                'errors' => $validator->errors(),
+            ]);
         } catch (\Exception $e) {
-            return Redirect::back()->withErrors(['error' => 'An error occurred while updating the user.']);
+            return response()->json([
+                'success' => false,
+                'msg' => 'An error occurred while updating the user.',
+            ]);
         }
     }
 
-    public function destroy(string $id)
+    public function destroy(string $uuid)
     {
         try {
-            User::destroy($id);
-            return Redirect::route('users.index')->with('success', 'User deleted successfully.');
+            User::where('user_id', $uuid)->firstOrFail()->delete();
+            return response()->json([
+                'success' => true,
+                'msg' => 'User deleted successfully.',
+                'route' => route('users.index'),
+            ]);
         } catch (\Exception $e) {
-            return Redirect::back()->withErrors(['error' => 'An error occurred while deleting the user.']);
+            return response()->json([
+                'success' => false,
+                'msg' => 'An error occurred while deleting the user.',
+            ]);
         }
     }
 }
