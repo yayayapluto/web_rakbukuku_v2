@@ -7,7 +7,15 @@ export default {
         "./resources/css/tailadmin/**/*.js", // Adjust the path based on where you placed TailAdmin
     ],
     theme: {
-        extend: {},
+        extend: {
+            fontFamily: {
+                'urbanist': ['Urbanist', 'sans-serif'],
+            },
+            colors: {
+                textColor: '#2D3033',
+                butonColor: '#0060AE'
+            },
+        },
     },
     plugins: [],
 };
