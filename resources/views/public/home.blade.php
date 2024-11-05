@@ -3,7 +3,7 @@
 @section('content')
 @vite('resources/css/app.css')
 
-<!-- Navigation buttons -->
+
 <button @click="prevSlide" class="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 rounded-full p-2 transition-colors">
     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
@@ -15,30 +15,43 @@
     </svg>
 </button>
 
-<div class="flex ">
-    <div class="w-[600px] h-[350px] mx-auto">
-        <div class="swiper-container relative flex justify-center items-center mt-4">
-            <!-- Additional required wrapper -->
+
+<div class="flex justify-center items-center  mt-2 cursor-pointer gap-x-5">
+    <!-- Swiper container on the left -->
+    <div class="w-[800px] h-[500px] "> <!-- Reduced width slightly -->
+        <div class="swiper-container relative flex justify-center items-center">
+            <!-- Swiper slides -->
             <div class="swiper-wrapper">
-                <!-- Slides -->
                 <div class="swiper-slide flex justify-center items-center hover-nav-trigger">
-                    <img src="https://img.freepik.com/free-psd/flat-design-pets-food-facebook-template_23-2150736528.jpg?t=st=1730383329~exp=1730386929~hmac=e4884cb1dce4cb11a687aea380b7cf91159c8658b3974a9ec592c0438433ffe3&w=1380" alt="" class="rounded-xl">
+                    <img src="{{Storage::url('banner.jpg')}}" alt="" class="rounded-xl h-[400px] w-[800px] ">
                 </div>
                 <div class="swiper-slide flex justify-center items-center hover-nav-trigger">
-                    <img src="https://img.freepik.com/free-psd/realistic-earth-day-celebration-youtube-cover_23-2150176526.jpg?t=st=1730383348~exp=1730386948~hmac=c23a23da7a8b1e95fbd13cd961ff1ab2fe04c510be9eed3c6d6656c53078b2d5&w=1380" alt="" class="rounded-xl">
+                    <img src="{{Storage::url('banner.jpg')}}" alt="" class="rounded-xl h-[400px] w-[800px]">
                 </div>
                 <div class="swiper-slide flex justify-center items-center hover-nav-trigger">
-                    <img src="https://img.freepik.com/free-psd/horizontal-banner-template-creative-business-solutions_23-2149072633.jpg?t=st=1730383494~exp=1730387094~hmac=ef497fe1424212716f4a1cfb71982f38a86b0c6da0a2dcf52f7c1d5a825fc82e&w=1380" alt="" class="rounded-xl">
+                    <img src="{{Storage::url('banner.jpg')}}" alt="" class="rounded-xl h-[400px] w-[800px]">
                 </div>
             </div>
 
-            <!-- Pagination positioned in front of the centered image -->
-            <div class="swiper-pagination absolute z-10 text-white" style="bottom: 10%"></div>
-            <div class="swiper-button-prev nav-button  hover:!opacity-100" "></div>
-        <div class=" swiper-button-next nav-button hover:!opacity-100"></div>
+            <!-- Pagination and navigation -->
+            <div class="swiper-pagination absolute z-10 text-white" style="bottom: 20%"></div>
+            <div class="swiper-button-prev nav-button hover:!opacity-100" ></div>
+            <div class="swiper-button-next nav-button hover:!opacity-100"></div>
+        </div>
+    </div>
+
+    <!-- Right side with two stacked images -->
+    <div class="flex flex-col space-y-3 mr-2">
+        <div class="w-[300px] h-[191px] flex items-center">
+            <img src="{{Storage::url('banner.jpg')}}" alt="" class="rounded-xl object-cover w-full h-full">
+        </div>
+        <div class="w-[300px] h-[191px] flex items-center">
+            <img src="{{Storage::url('banner.jpg')}}" alt="" class="rounded-xl object-cover w-full h-full">
         </div>
     </div>
 </div>
+
+
 
 <h1>Home</h1>
 
@@ -126,7 +139,7 @@
 
     .swiper-container {
         width: 100%;
-        height: 350px;
+        height: 500px;
         overflow: hidden;
     }
 
