@@ -13,6 +13,7 @@
         <tr>
             <th>Category ID</th>
             <th>Name</th>
+            <th>Image</th>
             <th>Actions</th>
         </tr>
     </thead>
@@ -21,6 +22,9 @@
             <tr id="category-{{ $category->category_id }}">
                 <td>{{ $category->category_id }}</td>
                 <td>{{ $category->name }}</td>
+                <td>
+                    <img src="{{ asset('storage/' . $category->image) }}" alt="Category Image" style="width: 100px; height: auto;">
+                </td>
                 <td>
                     <a href="{{ route('categories.edit', $category->category_id) }}" class="btn btn-warning btn-sm">Edit</a>
                     <button class="btn btn-danger btn-sm delete-category" data-id="{{ $category->category_id }}">Delete</button>

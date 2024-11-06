@@ -7,6 +7,8 @@ use App\Models\Category;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
+use Exception;
 
 class CategoryController extends Controller
 {
@@ -30,14 +32,7 @@ class CategoryController extends Controller
 
         try {
             $validator->validate();
-            $imageName = "";
-            $imagePath = "";
-
-            if ($request->hasFile('image')) {
-                $image = $request->file('image');
-                $imageName = "upload_" . date("ymd") . "_" . time() . "_" . $image->getClientOriginalName();            
-                $imagePath = $image->storeAs('categories', $imageName, ["disk" => "public"]);
-            }
+            $imagePath = $this->handleImageUpload($request);
 
             $category = Category::create([
                 'category_id' => Str::uuid(),
@@ -56,15 +51,14 @@ class CategoryController extends Controller
                 'msg' => 'Validation failed.',
                 'errors' => $validator->errors(),
             ], 422);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json([
                 'success' => false,
-                'msg' => 'An error occurred while creating the category.' . PHP_EOL . $e->getMessage(),
+                'msg' => 'An error occurred while creating the category. ' . $e->getMessage(),
                 'error' => $e->getMessage(),
             ], 500);
         }
     }
-
 
     public function show(string $uuid)
     {
@@ -82,14 +76,21 @@ class CategoryController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255|unique:categories,name,' . $uuid . ',category_id',
+            'image' => 'nullable|image|max:1024',
         ]);
 
         try {
             $validator->validate();
             $category = Category::where('category_id', $uuid)->firstOrFail();
+
+            // Handle image update if uploaded
+            $imagePath = $this->handleImageUpload($request, $category->image);
+
             $category->update([
                 'name' => $request->name,
+                'image' => $imagePath ?? $category->image, // Use the old image if no new one is provided
             ]);
+
             return response()->json([
                 'success' => true,
                 'msg' => 'Category updated successfully.',
@@ -101,10 +102,11 @@ class CategoryController extends Controller
                 'msg' => 'Validation failed.',
                 'errors' => $validator->errors(),
             ], 422);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json([
                 'success' => false,
                 'msg' => 'An error occurred while updating the category.',
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -112,16 +114,41 @@ class CategoryController extends Controller
     public function destroy(string $uuid)
     {
         try {
-            Category::where('category_id', $uuid)->firstOrFail()->delete();
+            $category = Category::where('category_id', $uuid)->firstOrFail();
+            $category->delete();
             return response()->json([
                 'success' => true,
                 'msg' => 'Category deleted successfully.',
             ]);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return response()->json([
                 'success' => false,
                 'msg' => 'An error occurred while deleting the category.',
+                'error' => $e->getMessage(),
             ], 500);
         }
+    }
+
+    /**
+     * Handle image upload logic.
+     *
+     * @param Request $request
+     * @param string|null $oldImagePath
+     * @return string|null
+     */
+    private function handleImageUpload(Request $request, string $oldImagePath = null)
+    {
+        if ($request->hasFile('image')) {
+            // Delete the old image if it exists
+            if ($oldImagePath && Storage::exists('public/' . $oldImagePath)) {
+                Storage::delete('public/' . $oldImagePath);
+            }
+
+            $image = $request->file('image');
+            $imageName = "upload_" . date("ymd") . "_" . time() . "_" . $image->getClientOriginalName();
+            return $image->storeAs('categories', $imageName, ['disk' => 'public']);
+        }
+
+        return null; // No new image uploaded
     }
 }

@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->uuid('category_id')->unique();
             $table->string('name');
+            $table->string('image');
             $table->timestamps();
         });
     }
