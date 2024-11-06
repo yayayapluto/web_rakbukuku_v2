@@ -25,14 +25,26 @@ class CategoryController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
+            'image' => 'nullable|image|max:1024',
         ]);
 
         try {
             $validator->validate();
+            $imageName = "";
+            $imagePath = "";
+
+            if ($request->hasFile('image')) {
+                $image = $request->file('image');
+                $imageName = "upload_" . date("ymd") . "_" . time() . "_" . $image->getClientOriginalName();            
+                $imagePath = $image->storeAs('categories', $imageName, ["disk" => "public"]);
+            }
+
             $category = Category::create([
                 'category_id' => Str::uuid(),
                 'name' => $request->name,
+                'image' => $imagePath,
             ]);
+
             return response()->json([
                 'success' => true,
                 'msg' => 'Category created successfully.',
@@ -47,10 +59,12 @@ class CategoryController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'msg' => 'An error occurred while creating the category.',
+                'msg' => 'An error occurred while creating the category.' . PHP_EOL . $e->getMessage(),
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
+
 
     public function show(string $uuid)
     {
