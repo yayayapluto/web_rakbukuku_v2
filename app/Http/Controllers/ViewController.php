@@ -6,7 +6,7 @@ use App\Models\Book;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
-class ViewController extends Controller
+class   ViewController extends Controller
 {
     private DataController $dataController;
 
@@ -18,8 +18,8 @@ class ViewController extends Controller
     // Home function
     public function home()
     {
-        $books = Book::all(); // Fetch all books
-        $categories = Category::all(); // Fetch all categories
+        $books = Book::limit(7)->get(); // Fetch all books
+        $categories = Category::inRandomOrder()->limit(7)->get(); // Fetch all categories
         $mostBorrowedBooks = $this->dataController->mostBorrowedBooks();
         $mostActiveUsers = $this->dataController->mostActiveUsers();
         $popularAuthors = $this->dataController->popularAuthors();

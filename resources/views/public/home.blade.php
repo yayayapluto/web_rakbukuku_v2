@@ -16,6 +16,7 @@
 </button>
 
 
+<!-- Banner -->
 <div class="flex justify-center items-center  mt-2 cursor-pointer gap-x-5">
     <!-- Swiper container on the left -->
     <div class="w-[800px] h-[500px] "> <!-- Reduced width slightly -->
@@ -35,7 +36,7 @@
 
             <!-- Pagination and navigation -->
             <div class="swiper-pagination absolute z-10 text-white" style="bottom: 20%"></div>
-            <div class="swiper-button-prev nav-button hover:!opacity-100" ></div>
+            <div class="swiper-button-prev nav-button hover:!opacity-100"></div>
             <div class="swiper-button-next nav-button hover:!opacity-100"></div>
         </div>
     </div>
@@ -52,23 +53,78 @@
 </div>
 
 
-
-<h1>Home</h1>
-
-<!-- Rest of your existing content -->
-
-<h2>Books</h2>
-<ul>
-    @forelse ($books as $book)
-    <li>
-        <a href="{{ route('books.detail', ['title' => $book->title]) }}">
-            {{ $book->title }} by {{ $book->writer }}
+<!-- Kategori -->
+<div class="w-full overflow-x-auto scrollbar-hide">
+    <div class="flex gap-4 p-4 justify-center items-center">
         </a>
-    </li>
+        @forelse ($categories as $cat)
+        <a href="{{route("categories.detail", $cat->name)}}" class="flex-none w-[152px] h-[176px] p-4 flex flex-col items-center no-underline rounded-lg hover:shadow-md transition-shadow duration-200">
+            <img class="w-24 h-24 object-contain mb-2" src="{{Storage::url($cat->image)}}" alt="Buku Baru Andalan">
+            <p class="text-gray-600 text-center text-sm h-9 m-0 leading-tight overflow-hidden line-clamp-2">{{$cat->name}}</p>
+        </a>
+        @empty
+        <li><b>No books available.</b></li>
+        @endforelse
+    </div>
+</div>
+
+<div class="relative mx-44 mt-4 mb-4 flex items-center justify-start">
+    <span class="text-neutral-700 text-2xl font-extrabold">Buku Terlaris</span>
+</div>
+
+@forelse ($mostBorrowedBooks as $most)
+<div class="flex items-center justify-center mb-12">
+    <div class="p-4 w-[150px] h-auto rounded-xl border border-gray-200 hover:drop-shadow-md bg-white ">
+        <a href="{{route('books.detail', $most->title)}}">
+            <div class=" flex items-center">
+                <img src="{{($most->cover)}}" alt="Book cover" class="w-[128px] h-[165px] rounded-xl">
+            </div>
+            <div class="mt-2 ">
+                <p class="text-neutral-500 text-xs font-medium">{{$most->writer}}</p>
+                <p class="text-xs font-medium">{{$most->title}}</p>
+            </div>
+            <div class="mt-4">
+                <p class="font-bold ">Detail</p>
+            </div>
+        </a>
+        @empty
+        <li><b>No books available.</b></li>
+        @endforelse
+    </div>
+</div>
+
+<div class="relative mx-44 mt-4 mb-4 flex items-center justify-start">
+    <span class="text-neutral-700 text-2xl font-extrabold">Rekomendasi Buku</span>
+</div>
+
+<div class="flex overflow-x-auto justify-center gap-4 mb-12">
+    @forelse ($books as $most)
+    <div class="p-4 w-[150px] h-auto rounded-xl border border-gray-200 hover:drop-shadow-md bg-white">
+        <a href="{{ route('books.detail', $most->title) }}">
+            <div class="flex items-center">
+                <img src="{{ $most->cover }}" alt="Book cover" class="w-[128px] h-[165px] rounded-xl">
+            </div>
+            <div class="mt-2">
+                <p class="text-neutral-500 text-xs font-medium">{{ $most->writer }}</p>
+                <p class="text-xs font-medium">{{ $most->title }}</p>
+            </div>
+            <div class="mt-4">
+                <p class="font-bold">Detail</p>
+            </div>
+        </a>
+    </div>
     @empty
     <li><b>No books available.</b></li>
     @endforelse
-</ul>
+</div>
+
+<div class="relative mx-44 mt-4 mb-4 flex items-center justify-start">
+    <span class="text-neutral-700 text-2xl font-extrabold">Author Populer</span>
+</div>
+
+
+
+
 @endsection
 
 @section('scripts')
@@ -84,7 +140,7 @@
             enabled: true
         },
         autoplay: {
-            delay: 3500,
+            delay: 4000,
             disableOnInteraction: false
         },
         pagination: {
@@ -163,5 +219,19 @@
         max-width: 100%;
         max-height: 100%;
         object-fit: cover;
+    }
+
+    .scrollbar-hide {
+        scrollbar-width: none;
+    }
+
+    /* For Chrome, Safari and Opera */
+    .scrollbar-hide::-webkit-scrollbar {
+        display: none;
+    }
+
+    /* For IE, Edge */
+    .scrollbar-hide {
+        -ms-overflow-style: none;
     }
 </style>

@@ -19,6 +19,7 @@ class CategoryFactory extends Factory
         return [
             'category_id' => $this->faker->uuid(),
             'name' => $this->faker->word(),
+            'image' => $this->faker->filePath()
         ];
     }
 }

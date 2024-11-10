@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Auth;
 
 <navbar class="fixed top-0 z-40 w-full bg-white h-20">
     <div class="l-container mx-auto px-4">
-        <div class="mt-4 flex items-center justify-evenly">
+        <div class="mt-4 flex items-center justify-evenly mb-3">
             <!-- Logo -->
             <div class="w-2/12 text-center">
                 <span class="font-bold text-lg">RakbBukuKu</span>

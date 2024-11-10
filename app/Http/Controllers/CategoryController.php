@@ -27,7 +27,7 @@ class CategoryController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|max:255',
-            'image' => 'nullable|image|max:1024',
+            'image' => 'nullable|max:1024',
         ]);
 
         try {
@@ -75,8 +75,8 @@ class CategoryController extends Controller
     public function update(Request $request, string $uuid)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255|unique:categories,name,' . $uuid . ',category_id',
-            'image' => 'nullable|image|max:1024',
+            'name' => 'required|string|max:255',
+            'image' => 'nullable|max:1024',
         ]);
 
         try {
@@ -99,13 +99,13 @@ class CategoryController extends Controller
         } catch (ValidationException $e) {
             return response()->json([
                 'success' => false,
-                'msg' => 'Validation failed.',
+                'msg' => 'Validation failed.' . $e,
                 'errors' => $validator->errors(),
             ], 422);
         } catch (Exception $e) {
             return response()->json([
                 'success' => false,
-                'msg' => 'An error occurred while updating the category.',
+                'msg' => 'An error occurred while updating the category.' . $e,
                 'error' => $e->getMessage(),
             ], 500);
         }

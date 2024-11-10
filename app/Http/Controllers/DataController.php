@@ -17,11 +17,10 @@ class DataController extends Controller
             ->selectRaw('count(records.book_id) as borrow_count')
             ->groupBy('books.book_id')
             ->orderBy('borrow_count', 'desc')
-            ->take(10)
+            ->take(7)
             ->get();
     }
 
-    // Most active users
     public function mostActiveUsers()
     {
         return User::select('users.*')
@@ -29,7 +28,7 @@ class DataController extends Controller
             ->selectRaw('count(records.user_id) as borrow_count')
             ->groupBy('users.user_id')
             ->orderBy('borrow_count', 'desc')
-            ->take(10)
+            ->take(7)
             ->get();
     }
 
@@ -41,7 +40,7 @@ class DataController extends Controller
             ->join('records', 'books.book_id', '=', 'records.book_id')
             ->groupBy('writer')
             ->orderBy('borrow_count', 'desc')
-            ->take(10) // Limit to top 10 authors
+            ->take(7) // Limit to top 10 authors
             ->get();
     }
 }
