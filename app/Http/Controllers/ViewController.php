@@ -51,8 +51,9 @@ class   ViewController extends Controller
     {
         $category = Category::where('name', $name)->firstOrFail(); // Fetch category by name
         $books = $category->books; // Get books related to this category
+        $categories = Category::all();
 
-        return view("public.category", compact('category', 'books'));
+        return view("public.category", compact('category', 'books', 'categories'));
     }
 
 

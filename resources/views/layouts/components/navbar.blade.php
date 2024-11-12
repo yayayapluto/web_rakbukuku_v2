@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Auth;
         <div class="mt-4 flex items-center justify-evenly ">
             <!-- Logo -->
             <div class="w-2/12 text-center">
-                <span class="font-bold text-lg">RakbBukuKu</span>
+                <a href="{{route("home")}}">
+                    <span class="font-bold text-lg">RakbBukuKu</span>
+                </a>
             </div>
 
             <!-- Category Dropdown Button -->
