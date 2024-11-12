@@ -28,7 +28,7 @@ class DataController extends Controller
             ->selectRaw('count(records.user_id) as borrow_count')
             ->groupBy('users.user_id')
             ->orderBy('borrow_count', 'desc')
-            ->take(7)
+            ->take(3)
             ->get();
     }
 
@@ -40,7 +40,7 @@ class DataController extends Controller
             ->join('records', 'books.book_id', '=', 'records.book_id')
             ->groupBy('writer')
             ->orderBy('borrow_count', 'desc')
-            ->take(7) // Limit to top 10 authors
+            ->take(3) 
             ->get();
     }
 }
