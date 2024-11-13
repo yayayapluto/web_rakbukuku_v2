@@ -56,13 +56,13 @@ use Illuminate\Support\Facades\Auth;
                     </button>
 
                     <div id="user-menu" class="absolute right-0 mt-2 w-64 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
-                        <div class="p-4 text-start flex justify-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto text-gray-500" fill="currentColor" viewBox="0 0 24 24">
+                        <div class="p-2 text-start flex justify-start">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 ml-2 mt-2 text-gray-500" fill="currentColor" viewBox="0 0 24 24">
                                 <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v1h16v-1c0-2.66-5.33-4-8-4z" />
                             </svg>
-                            <div class="">
-                                <p class="mt-2 font-semibold text-gray-700">{{$user->name}}</p>
-                                <p class="text-sm text-gray-500">{{$user->email}}</p>
+                            <div class="justify-start">
+                                <p class="mt-2 font-semibold text-gray-700">{{Auth::user()->name}}</p>
+                                <p class="text-sm text-gray-500">{{Auth::user()->email}}</p>
                             </div>
                         </div>
                         <div class="border-t border-gray-200">
