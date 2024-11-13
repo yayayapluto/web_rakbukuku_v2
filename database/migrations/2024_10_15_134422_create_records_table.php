@@ -16,7 +16,7 @@ return new class extends Migration
             $table->uuid('record_id')->unique();
             $table->uuid('user_id');
             $table->uuid('book_id');
-            $table->enum('status', ['borrow', 'return']);
+            $table->enum('status', ['none','borrow', 'return'])->nullable();
             $table->date('borrow_date')->nullable();
             $table->date('return_date')->nullable();
             $table->timestamps();

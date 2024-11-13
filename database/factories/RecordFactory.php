@@ -24,7 +24,7 @@ class RecordFactory extends Factory
             'record_id' => $this->faker->uuid(),
             'user_id' => User::inRandomOrder()->first()->user_id ?? null, // Use an existing User
             'book_id' => Book::inRandomOrder()->first()->book_id ?? null, // Use an existing Book
-            'status' => $this->faker->randomElement(['borrow', 'return']),
+            'status' => $this->faker->randomElement(['borrow', 'return', 'none']),
             'borrow_date' => $this->faker->date(),
             'return_date' => $this->faker->date(),
         ];

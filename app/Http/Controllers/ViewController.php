@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Book;
 use App\Models\Category;
+use App\Models\Record;
+use Auth;
 use Illuminate\Http\Request;
 
 class   ViewController extends Controller
@@ -36,9 +38,22 @@ class   ViewController extends Controller
     // Book detail function
     public function book_detail($title)
     {
-        $book = Book::where('title', $title)->firstOrFail();
+        $book = Book::where('title', $title)->firstOrFail();  // Get the book by title
+
+        // If the user is logged in, get their borrowing record for this book
+        if (Auth::check()) {
+            $record = Record::where("book_id", $book->book_id)
+                ->where("user_id", Auth::user()->user_id)
+                ->latest()
+                ->first();  // Get the first matching record, or null if not found
+            return view("public.book", compact('book', "record"));
+        }
+
+        // If the user is not logged in, just pass the book details
         return view("public.book", compact('book'));
     }
+
+
 
     // Categories function
     public function categories()

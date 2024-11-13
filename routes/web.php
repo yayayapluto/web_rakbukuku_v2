@@ -31,11 +31,11 @@ Route::get('/search', [ViewController::class, 'search'])->name('search');
 Route::middleware(['auth'])->group(function () {
     Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
-    Route::get('/borrow', [UserRecordController::class, 'showBorrowForm'])->name('borrow.form');
-    // Route::post('/borrow', [UserRecord::class, 'borrow'])->name('borrow.submit');
+    Route::get('books/{id}/borrow', [UserRecordController::class, 'showBorrowForm'])->name('borrow.form');
+    Route::post('books/{id}/borrow', [UserRecordController::class, 'borrow'])->name('borrow.submit');
 
-    Route::get('/return', [UserRecordController::class, 'showReturnForm'])->name('return');
-    // Route::post('/return', [UserRecord::class, 'return'])->name('return.submit');
+    Route::get('books/{id}/return', [UserRecordController::class, 'showReturnForm'])->name('return.form');
+    Route::post('books/{id}/return', [UserRecordController::class, 'return'])->name('return.submit');
 
     Route::get('/profile', [UserRecordController::class, 'showProfile'])->name('profile');
     Route::get('/profile/history', [UserRecordController::class, 'showHistory'])->name('profile.history');

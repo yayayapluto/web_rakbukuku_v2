@@ -34,6 +34,14 @@ class DatabaseSeeder extends Seeder
             "is_admin" => true
         ]);
 
+        User::create([
+            "user_id" => \Str::uuid(),
+            "name" => "farras",
+            "email" => "farras@gmail.com",
+            "password" => "12345678",
+            "is_admin" => false
+        ]);
+
         User::factory(10)->create();
         Rack::factory(3)->create();
         Category::factory(10)->create();
