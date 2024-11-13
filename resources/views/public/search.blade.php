@@ -2,11 +2,11 @@
 @section('title', "Search for: $query")
 
 @section("content")
-
+<h1 class="font-urbanist font-medium text-neutral-700 text-lg">Hasil Pencarian <strong>"{{ $query }}"</strong></h1>
 <div class="flex">
     @forelse ($books as $book)
     <div class="flex items-center ">
-        <h1 class="font-urbanist font-medium text-neutral-700 text-lg">Hasil Pencarian <strong>"{{ $query }}"</strong></h1>
+
         <div class="results-grid">
 
             <div class="book-card p-4 w-[150px] h-auto rounded-xl border border-gray-200 hover:drop-shadow-md bg-white">
@@ -38,4 +38,3 @@
 </div>
 
 @endsection
-

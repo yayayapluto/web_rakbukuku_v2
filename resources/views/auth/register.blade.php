@@ -97,8 +97,7 @@
             const formData = new FormData(this)
 
             $.ajax({
-                url: '{{ route('
-                register.submit ') }}',
+                url: '{{ route('register.submit') }}',
                 type: "POST",
                 data: formData,
                 processData: false,

@@ -70,8 +70,7 @@
             const formData = new FormData(this);
 
             $.ajax({
-                url: '{{ route('
-                login.submit ') }}',
+                url: '{{ route('login.submit') }}',
                 type: "POST",
                 data: formData,
                 processData: false,

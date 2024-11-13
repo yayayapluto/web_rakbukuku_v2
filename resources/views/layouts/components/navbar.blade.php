@@ -45,16 +45,41 @@ use Illuminate\Support\Facades\Auth;
             </div>
             @else
             <div class="w-2/12 text-center">
-                <a href="{{ route('profile.history') }}">
-                    <button class="relative inline-flex items-center font-bold bg-white border border-neutral-200 text-neutral-700 py-3 px-4 rounded">
-                        History
+                <div class="relative">
+                    <button id="user-menu-button" class="flex items-center focus:outline-none">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-gray-600 rounded-full" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v1h16v-1c0-2.66-5.33-4-8-4z" />
+                        </svg>
+                        <svg class="ml-2 h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
                     </button>
-                </a>
-                <a href="{{ route('profile') }}">
-                    <button class="relative inline-flex items-center font-bold bg-blue-500 text-white py-3 px-4 rounded">
-                        Profile
-                    </button>
-                </a>
+
+                    <div id="user-menu" class="absolute right-0 mt-2 w-64 rounded-lg shadow-lg bg-white ring-1 ring-black ring-opacity-5 hidden focus:outline-none" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1">
+                        <div class="p-4 text-start flex justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-12 h-12 mx-auto text-gray-500" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v1h16v-1c0-2.66-5.33-4-8-4z" />
+                            </svg>
+                            <div class="">
+                                <p class="mt-2 font-semibold text-gray-700">{{$user->name}}</p>
+                                <p class="text-sm text-gray-500">{{$user->email}}</p>
+                            </div>
+                        </div>
+                        <div class="border-t border-gray-200">
+                            <a href="{{ route('profile.history') }}" class="flex items-center justify-between px-4 py-2 text-gray-700 hover:bg-gray-100 hover:text-gray-900">
+                                <span>History</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                                <a href="{{route("logout")}}" class="flex items-center justify-between px-4 py-2 text-red-600 hover:bg-gray-100">
+                                    <span>Keluar Akun</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </a>
+                        </div>
+                    </div>
+                </div>
             </div>
             @endif
             @else
@@ -94,6 +119,19 @@ use Illuminate\Support\Facades\Auth;
             const query = this.value;
             const url = this.getAttribute('data-url') + '?q=' + encodeURIComponent(query);
             window.location.href = url; // Redirect to the search URL
+        }
+    });
+
+    const userMenuButton = document.getElementById('user-menu-button');
+    const userMenu = document.getElementById('user-menu');
+
+    userMenuButton.addEventListener('click', () => {
+        userMenu.classList.toggle('hidden');
+    });
+
+    window.addEventListener('click', (event) => {
+        if (!event.target.closest('#user-menu-button') && !event.target.closest('#user-menu')) {
+            userMenu.classList.add('hidden');
         }
     });
 </script>

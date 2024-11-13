@@ -72,25 +72,25 @@
     <span class="text-neutral-700 text-2xl font-extrabold">Buku Terlaris</span>
 </div>
 
-@forelse ($mostBorrowedBooks as $most)
-<div class="flex items-center justify-center mb-12">
-    <div class="p-4 w-[150px] h-auto rounded-xl border border-gray-200 hover:drop-shadow-md bg-white ">
+<div class="flex items-center justify-center flex-wrap gap-4">
+    @forelse ($mostBorrowedBooks as $most)
+    <div class="p-4 w-[150px] h-auto rounded-xl border border-gray-200 hover:drop-shadow-md bg-white">
         <a href="{{route('books.detail', $most->title)}}">
-            <div class=" flex items-center">
+            <div class="flex items-center">
                 <img src="{{($most->cover)}}" alt="Book cover" class="w-[128px] h-[165px] rounded-xl">
             </div>
-            <div class="mt-2 ">
+            <div class="mt-2">
                 <p class="text-neutral-500 text-xs font-medium">{{$most->writer}}</p>
                 <p class="text-xs font-medium">{{$most->title}}</p>
             </div>
             <div class="mt-4">
-                <p class="font-bold ">Detail</p>
+                <p class="font-bold">Detail</p>
             </div>
         </a>
-        @empty
-        <li><b>No books available.</b></li>
-        @endforelse
     </div>
+    @empty
+    <li><b>No books available.</b></li>
+    @endforelse
 </div>
 
 <div class="relative mx-44 mt-4 mb-4 flex items-center justify-start">
@@ -131,14 +131,11 @@
             <div class="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center">
                 <span class="text-teal-800 text-lg">👨</span>
             </div>
-            <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-red-500 rounded-lg flex items-center justify-center">
-                <span class="text-white text-xs">2</span>
-            </div>
         </div>
 
         <div class="flex flex-col">
-            <span class="font-semibold text-gray-800">Davis Curtis</span>
-            <span class="text-sm text-gray-500">2,569 points</span>
+            <span class="font-semibold text-gray-800">{{$populer->writer}}</span>
+            <span class="text-sm text-gray-500">{{$populer->borrow_count}} orang meminjam</span>
         </div>
     </div>
 
@@ -157,21 +154,18 @@
 </div>
 
 <!-- User Populer -->
-@forelse ($popularAuthors as $populer)
+@forelse ($mostActiveUsers as $active)
 <div class="bg-white rounded-t-2xl shadow p-4 flex items-center justify-between max-w-sm mb-10 ml-48">
     <div class="flex items-center gap-3">
         <div class="relative">
             <div class="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center">
                 <span class="text-teal-800 text-lg">👨</span>
             </div>
-            <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-red-500 rounded-lg flex items-center justify-center">
-                <span class="text-white text-xs">2</span>
-            </div>
         </div>
 
         <div class="flex flex-col">
-            <span class="font-semibold text-gray-800">Davis Curtis</span>
-            <span class="text-sm text-gray-500">2,569 points</span>
+            <span class="font-semibold text-gray-800">{{$active->name}}</span>
+            <span class="text-sm text-gray-500">{{$active->borrow_count}}</span>
         </div>
     </div>
 
