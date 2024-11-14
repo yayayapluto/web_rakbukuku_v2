@@ -118,64 +118,73 @@
     @endforelse
 </div>
 
-<div class="relative mx-44 mt-4 mb-4 flex items-center justify-start">
+
+
+<!-- Popular Authors Section -->
+<div class="relative mx-44 mt-4 mb-4">
     <span class="text-neutral-700 text-2xl font-extrabold">Author Populer</span>
 </div>
 
-<!-- Author Populer -->
+<div class="ml-48 flex flex-row gap-4 flex-wrap">
+    @forelse ($popularAuthors as $populer)
+    <div class="bg-white rounded-t-2xl shadow p-4 flex items-center justify-between w-80">
+        <div class="flex items-center gap-3">
+            <div class="relative">
+                <div class="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center">
+                    <span class="text-teal-800 text-lg">👨</span>
+                </div>
+            </div>
 
-@forelse ($popularAuthors as $populer)
-<div class="bg-white rounded-t-2xl shadow p-4 flex items-center justify-between max-w-sm mb-16 ml-48">
-    <div class="flex items-center gap-3">
-        <div class="relative">
-            <div class="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center">
-                <span class="text-teal-800 text-lg">👨</span>
+            <div class="flex flex-col">
+                <span class="font-semibold text-gray-800">{{$populer->writer}}</span>
+                <span class="text-sm text-gray-500">{{$populer->borrow_count}} orang meminjam</span>
             </div>
         </div>
 
-        <div class="flex flex-col">
-            <span class="font-semibold text-gray-800">{{$populer->writer}}</span>
-            <span class="text-sm text-gray-500">{{$populer->borrow_count}} orang meminjam</span>
+        <div class="bg-amber-400 p-2 rounded-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
+            </svg>
         </div>
     </div>
-
-    <div class="bg-amber-400 p-2 rounded-lg">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
-        </svg>
-    </div>
     @empty
-    <li><b>No Author available.</b></li>
+    <div class="text-center py-4">
+        <span class="font-bold">No Author available.</span>
+    </div>
     @endforelse
 </div>
 
-<div class="relative mx-44 mt-4 mb-4 flex items-center justify-start">
+<!-- Active Users Section -->
+<div class="relative mx-44 mt-8 mb-4">
     <span class="text-neutral-700 text-2xl font-extrabold">User Paling Aktif</span>
 </div>
 
-<!-- User Populer -->
-@forelse ($mostActiveUsers as $active)
-<div class="bg-white rounded-t-2xl shadow p-4 flex items-center justify-between max-w-sm mb-10 ml-48">
-    <div class="flex items-center gap-3">
-        <div class="relative">
-            <div class="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center">
-                <span class="text-teal-800 text-lg">👨</span>
+<div class="ml-48 flex flex-row gap-4 flex-wrap mb-8">
+    @forelse ($mostActiveUsers as $active)
+    <div class="bg-white rounded-t-2xl shadow p-4 flex items-center justify-between w-80">
+        <div class="flex items-center gap-3">
+            <div class="relative">
+                <div class="w-12 h-12 bg-teal-100 rounded-full flex items-center justify-center">
+                    <span class="text-teal-800 text-lg">👨</span>
+                </div>
+            </div>
+
+            <div class="flex flex-col">
+                <span class="font-semibold text-gray-800">{{$active->name}}</span>
+                <span class="text-sm text-gray-500">{{$active->borrow_count}}</span>
             </div>
         </div>
 
-        <div class="flex flex-col">
-            <span class="font-semibold text-gray-800">{{$active->name}}</span>
-            <span class="text-sm text-gray-500">{{$active->borrow_count}}</span>
+        <div class="bg-amber-400 p-2 rounded-lg">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
+            </svg>
         </div>
     </div>
-
-    <div class="bg-amber-400 p-2 rounded-lg">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z" />
-        </svg>
-    </div>
     @empty
-    <li><b>No Author available.</b></li>
+    <div class="text-center py-4">
+        <span class="font-bold">No User available.</span>
+    </div>
     @endforelse
 </div>
 
