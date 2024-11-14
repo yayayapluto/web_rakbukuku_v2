@@ -69,7 +69,7 @@ class UserRecordController extends Controller
             return response()->json([
                 'success' => true,
                 'msg' => 'Book borrowed successfully!',
-                'route' => route('user.profile'),  // You can return the route to redirect after success
+                'route' => route("home"),  // You can return the route to redirect after success
             ]);
         } catch (\Exception $e) {
             // Catch any exception and return a failure message
@@ -111,7 +111,7 @@ class UserRecordController extends Controller
             return response()->json([
                 'success' => true,
                 'msg' => 'Book returned successfully!',
-                'route' => route('user.history'),
+                'route' => route('home'),
             ]);
         } catch (\Exception $e) {
             return response()->json([
